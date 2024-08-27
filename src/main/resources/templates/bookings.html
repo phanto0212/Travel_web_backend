@@ -1,0 +1,245 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.com">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Travel App</title>
+    <style>
+        .container {
+            margin-left: 100px;
+            
+            max-width: 1150px;
+        }
+        .row-btn-action button {
+            width: 80px;
+        }
+        .row-btn-action {
+            display: flex;
+            gap: 10px;
+        }
+        .btn-size {
+            height: 30px;
+            border: 1px solid #999;
+            border-radius: 2px;
+            color: #fff;
+        }
+        .modal-dialog-centered {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            min-height: 70vh;
+        }
+        .small-column {
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .medium-column {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .avatar-image {
+            width: 50px; /* Chiều rộng của ảnh */
+            height: 50px; /* Chiều cao của ảnh */
+            border-radius: 50%; /* Bo tròn ảnh */
+        }
+        .header-list {
+            display: flex;
+            flex-direction: row;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .btn-add-tour {
+            position: fixed;
+            right: 50px;
+            top: 50px;
+        }
+        .modal-header {
+            background-color: #f8f9fa;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .modal-footer {
+            background-color: #f8f9fa;
+            border-top: 1px solid #dee2e6;
+        }
+        .modal-title {
+            font-weight: bold;
+        }
+        .form-group label {
+            font-weight: bold;
+        }
+        .btn-primary {
+            background-color: #007bff;
+            border-color: #007bff;
+        }
+        .btn-primary:hover {
+            background-color: #0056b3;
+            border-color: #004085;
+        }
+        .form-control-file {
+            margin-top: 10px;
+        }
+        table {
+            width: 100%;
+        }
+        th, td {
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: #007bff;
+            color: #000;
+        }
+        .btn-sm {
+            padding: 0.25rem 0.5rem;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-light bg-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand text-white" href="/">Travel App</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link active text-white" aria-current="page" href="/">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="dashboard">DashBoard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="tours">Tours</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="bookings">Booking Tour</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="my_books">news</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="ratings">Ratings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="comments">Comments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="news">News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="payments">Payments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="thong_ke">Thống Kê</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="accounts">Accounts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-white" href="/invoices">Invoices</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h2>Bookings List</h2>
+        <table class="table table-striped table-bordered">
+            <thead>
+                <tr>
+                    <th scope="col">Booking ID</th>
+                    <th scope="col">User ID</th>
+                    <th scope="col">Tour ID</th>
+                    <th scope="col">Booking Date</th>
+                    <th scope="col">Status</th>
+					<th scope="col">QuanlityTicketAdult</th>
+					<th scope="col">QuanlityTicketChildren</th>
+                    <th scope="col">Total Price</th>
+                    <th scope="col">Created At</th>
+                    <th scope="col">Updated At</th>
+                    <th scope="col">Action</th>
+                    <th scope="col">Paying</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr th:each="booking : ${bookings}">
+                    <td th:text="${booking.bookingId}" class="small-column"></td>
+                    <td th:text="${booking.user.id}" class="small-column"></td>
+                    <td th:text="${booking.tour.tourId}" class="small-column"></td>
+                    <td th:text="${booking.bookingDate}" class="medium-column"></td>
+                    <td th:text="${booking.status}" class="medium-column"></td>
+					<td th:text="${booking.number_of_adults}" class="medium-column"></td>
+					<td th:text="${booking.number_of_children}" class="medium-column"></td>
+                    <td th:text="${booking.totalPrice}" class="medium-column"></td>
+                    <td th:text="${booking.createdAt}" class="small-column"></td>
+                    <td th:text="${booking.updatedAt}" class="small-column"></td>
+                    <td class="row-btn-action">
+                        <form action="#" th:action="@{/editBooking/{id}(id=${booking.bookingId})}" method="post">
+                            <button type="submit" style="background-color: blue;" class="btn-size btn btn-secondary btn-sm">Edit</button>
+                        </form>
+                        <form action="#" th:action="@{/deleteBooking/{id}(id=${booking.bookingId})}" method="post">
+                            <button type="submit" style="background-color: red;" class="btn-size btn btn-secondary btn-sm">Delete</button>
+                        </form>
+                    </td>
+					<td>
+					    <button type="button" class="btn btn-primary btn-sm"
+					        th:if="${booking.status != 'COMPLETED'}"
+					        th:onclick="'pay(' + ${booking.totalPrice} + ', \'NCB\', ' + ${booking.bookingId} + ', ' + ${booking.user.id} + ')'">Pay</button>
+					    <button type="button" class="btn btn-secondary btn-sm"
+					        th:if="${booking.status == 'COMPLETED'}"
+					        disabled>Paid</button>
+					</td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+	<script>
+		    function pay(amount, bankCode, bookingId, userId) {
+				//console.log(status);
+				//if (status === 'COMPLETED') {
+				   //           alert('Booking này đã được thanh toán');
+					//		  console.log(status);
+				      //        return;
+				 // }
+				  //else{
+					// Chuyển đổi các giá trị số thành chuỗi
+							        const strAmount = amount.toString();
+							        const strBookingId = bookingId.toString();
+							        const strUserId = userId.toString();
+
+							        // Tạo URL với các tham số đã chuyển đổi thành chuỗi
+							        const url = `/api/v1/payment/vn-pay?amount=${strAmount}&bankCode=${bankCode}&bookingId=${strBookingId}&userId=${strUserId}`;
+
+							        // Gửi yêu cầu GET đến endpoint với các tham số
+							        fetch(url)
+							            .then(response => response.json())
+							            .then(data => {
+							                // Lấy URL thanh toán từ phản hồi JSON
+							                const paymentUrl = data.data.paymentUrl;
+							                // Mở URL thanh toán trong tab mới
+							                window.open(paymentUrl, '_blank');
+							            })
+							            .catch(error => {
+							                console.error('Error:', error);
+							            });
+				  
+				  
+		        
+		    }
+		</script>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+</body>
+</html>

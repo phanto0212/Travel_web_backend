@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Login</title>
+</head>
+<body>
+    <h1>Spring MVC-Security Login Form</h1>
+    <h2 th:if="${mess != null}" th:text="${mess}" style="color:red"></h2>
+    <form name="loginForm" th:action="@{/j_spring_security_login}" method="POST">
+        <table>
+            <tr>
+                <td>User:</td>
+                <td><input type="text" name="username"></td>
+            </tr>
+            <tr>
+                <td>Password:</td>
+                <td><input type="password" name="password"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input name="submit" type="submit" value="login"></td>
+            </tr>
+        </table>
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}" />
+    </form>
+</body>
+</html>

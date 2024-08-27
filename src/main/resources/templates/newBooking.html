@@ -1,0 +1,141 @@
+<!doctype html>
+<html lang="en" xmlns:th="https://www.thymeleaf.com">
+  <head>
+   
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+
+    <title>Travel App</title>
+  </head>
+  <body>
+	<nav class="navbar navbar-expand-lg navbar-light bg-dark">
+	  <div class="container-fluid">
+	    <a class="navbar-brand text-white" href="/">Travel App</a>
+	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+	      <span class="navbar-toggler-icon"></span>
+	    </button>
+	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+	      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+	        <li class="nav-item">
+	          <a class="nav-link active text-white" aria-current="page" href="/">Home</a>
+	        </li>
+			<li class="nav-item">
+			          <a class="nav-link text-white" href="dashboard">DashBoard</a>
+			 </li>
+	        <li class="nav-item">
+	          <a class="nav-link text-white" href="tours">Tours</a>
+	        </li>
+			<li class="nav-item">
+			  <a class="nav-link text-white" href="bookings">Booking Tour</a>
+		    </li>
+			<li class="nav-item">
+				<a class="nav-link text-white" href="my_books">news</a>
+			</li>
+			<li class="nav-item">
+			     <a class="nav-link text-white" href="ratings">Ratings</a>
+			</li>			
+			 <li class="nav-item">
+			 	<a class="nav-link text-white" href="comments">Comments</a>
+			 </li>
+			 <li class="nav-item">
+			 	<a class="nav-link text-white" href="news">News</a>
+			 </li>
+			 <li class="nav-item">
+			 	<a class="nav-link text-white" href="payments">Payments</a>
+			  </li>
+			  <li class="nav-item">
+			  	<a class="nav-link text-white" href="thong_ke">Thống Kê</a>
+			  </li>
+			  <li class="nav-item">
+			  	<a class="nav-link text-white" href="accounts">Accounts</a>
+			  </li>
+	      </ul>	
+	        
+	    </div>
+	  </div>
+	</nav>
+	<div class="container my-5 p-5 bg-light shadow rounded">
+	        <h4 class="text-center mb-4">New Booking</h4>
+	        <form th:action="@{/returnBooking}" method="post" th:object="${booking}">
+				<input type="hidden" th:field="*{bookingId}" name="bookingId" />
+				    <input type="hidden" th:field="*{user.id}" name="userId" />
+				    <input type="hidden" th:field="*{tour.tourId}" name="tourId" />
+	            <div class="mb-3">
+	                <label for="user" class="form-label">Customer Name</label>
+	                <input type="text" th:field="*{user.fullName}" class="form-control" id="user" readonly>
+	            </div>
+
+	            <div class="mb-3">
+	                <label for="tour" class="form-label">Tour Name</label>
+	                <input type="text" th:field="*{tour.title}" class="form-control" id="tour" readonly>
+	            </div>
+
+	            <div class="mb-3">
+	                <label for="bookingDate" class="form-label">Booking Date</label>
+	                <input type="date" th:field="*{bookingDate}" class="form-control" id="bookingDate" name="bookingDate" required>
+	            </div>
+
+	            <div class="mb-3">
+	                <label for="status" class="form-label">Status</label>
+	                <input type="text" th:field="*{status}" class="form-control" id="status" name="status" readonly>
+	            </div>
+
+	            <div class="form-group mb-3">
+	                <label for="number_of_adults">Quantity Adult</label>
+	                <input type="number" class="form-control" id="number_of_adults" name="number_of_adults" required>
+	            </div>
+
+	            <div class="form-group mb-3">
+	                <label for="number_of_children">Quantity Children</label>
+	                <input type="number" class="form-control" id="number_of_children" name="number_of_children" required>
+	            </div>
+
+	            <div class="mb-3">
+	                <label for="totalPrice" class="form-label">Total Price</label>
+	                <input type="number" step="0.01" class="form-control" id="totalPrice" name="totalPrice" readonly>
+	            </div>
+
+	            <div class="d-grid">
+	                <button type="submit" class="btn btn-primary">OK</button>
+	            </div>
+	        </form>
+	    </div>
+
+	    <form th:object="${tour}">
+	        <input type="hidden" th:field="*{adult_price}" class="form-control" id="adult_price" name="adult_price">
+	        <input type="hidden" th:field="*{child_price}" class="form-control" id="child_price" name="child_price">
+	    </form>
+
+	    <script>
+	        document.addEventListener('DOMContentLoaded', function() {
+	            const adultPriceInput = document.getElementById('adult_price');
+	            const childPriceInput = document.getElementById('child_price');
+	            const numberOfAdultsInput = document.getElementById('number_of_adults');
+	            const numberOfChildrenInput = document.getElementById('number_of_children');
+	            const totalPriceInput = document.getElementById('totalPrice');
+
+	            function calculateTotalPrice() {
+	                const adultPrice = parseFloat(adultPriceInput.value) || 0;
+	                const childPrice = parseFloat(childPriceInput.value) || 0;
+	                const numberOfAdults = parseInt(numberOfAdultsInput.value) || 0;
+	                const numberOfChildren = parseInt(numberOfChildrenInput.value) || 0;
+
+	                const totalPrice = (adultPrice * numberOfAdults) + (childPrice * numberOfChildren);
+	                totalPriceInput.value = totalPrice.toFixed(2);
+	            }
+
+	            numberOfAdultsInput.addEventListener('input', calculateTotalPrice);
+	            numberOfChildrenInput.addEventListener('input', calculateTotalPrice);
+	        });
+	    </script>
+	
+	
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
+    
+  </body>
+</html>
