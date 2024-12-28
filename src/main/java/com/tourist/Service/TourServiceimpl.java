@@ -125,4 +125,10 @@ public class TourServiceimpl implements TourService {
 		// TODO Auto-generated method stub
 		return tourImageCustomRepository.getAllByTour_id(tour_id);
 	}
+
+	@Override
+	public List<Tour> getListByKey(String key) {
+		// TODO Auto-generated method stub
+		return tourRespository.getListByKey(key);
+	}
 }

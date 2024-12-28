@@ -24,4 +24,10 @@ public class NewServiceimpl implements NewService{
 		return newRespository.findAll();
 	}
 
+	@Override
+	public void deleteNews(int id) {
+		newRespository.deleteById(id);
+		
+	}
+
 }

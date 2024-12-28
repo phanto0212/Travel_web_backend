@@ -10,6 +10,5 @@ public class AuthService {
 
     @Autowired
     private JwtTokenUtil jwtTokenUtil;
-
     
 }

@@ -7,6 +7,7 @@ import java.util.List;
 import org.springframework.stereotype.Repository;
 import org.springframework.transaction.annotation.Transactional;
 
+
 import com.tourist.Entity.Tour;
 
 import jakarta.persistence.EntityManager;
@@ -150,6 +151,16 @@ public class TourRespositoryimpl implements TourRespository {
 	        TypedQuery<Tour> query = entityManager.createQuery(cq);
 
 	        return query.getResultList();
+	}
+
+	@Override
+	public List<Tour> getListByKey(String key) {
+		String hql = "SELECT m FROM Tour m WHERE " +
+		           "LOWER(m.title) LIKE LOWER(CONCAT('%', :key, '%')) OR " +
+		           "LOWER(m.destination_location) LIKE LOWER(CONCAT('%', :key, '%')) " ;
+		TypedQuery<Tour> query = entityManager.createQuery(hql, Tour.class);
+		query.setParameter("key", key);
+		return query.getResultList();
 	}
 
 	

@@ -7,7 +7,7 @@ import com.tourist.Entity.Tour;
 import com.tourist.Entity.TourImage;
 
 public interface TourService {
-
+	List<Tour> getListByKey(String key);
 	List<Tour> getList();
 	void AddOrUpdate(Tour tour);
 	Tour getTourById(int id);

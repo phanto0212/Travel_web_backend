@@ -9,7 +9,7 @@ import com.tourist.Entity.Tour;
 
 
 public interface TourRespository {
-
+    List<Tour> getListByKey(String key);
 	List<Tour> getList();
 	void AddOrUpdate(Tour tour);
 	Tour getTourById(int id);

@@ -8,4 +8,5 @@ public interface NewService {
 
 	void addNews(News news);
 	List<News> getList();
+	void deleteNews(int id);
 }

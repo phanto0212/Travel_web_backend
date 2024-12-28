@@ -83,7 +83,7 @@ public class ApiTourController {
         return ResponseEntity.ok(response);
 	
 }
-	@GetMapping("/get/all")
+	@GetMapping("/get/all") 
     public ResponseEntity<Map<String, Object>> getAllTours(
             @RequestParam(value = "text", required = false) Integer text,
             @RequestParam(value = "price", required = false) Integer price) {
@@ -249,5 +249,20 @@ public class ApiTourController {
 			return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("error when fetching rate and booking data");
 		}
 	}
+	@PostMapping("/get/tour/by/key")
+	public ResponseEntity<?> getTourByKey(@RequestBody Map<String, String> map){
+		try {
+			String key = map.get("key");
+			List<Tour> tour = tourService.getListByKey(key);
+			Map<String, Object> reponse = new HashMap<>(); 
+			reponse.put("tours", tour);
+			return ResponseEntity.ok(reponse);
+		}
+		catch(Exception e) {
+			e.printStackTrace();
+			throw e;
+		}
+	}
+	
 	
 }
