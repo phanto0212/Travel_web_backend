@@ -1,297 +1,484 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en" xmlns:th="https://www.thymeleaf.com">
-  <head>
-   
+<head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-
+    <title>Travel App - Tours</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Font Awesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <!-- Google Fonts -->
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #2E7DD1;
+            --primary-dark: #1A5BA0;
+            --secondary: #6c757d;
+            --success: #10B981;
+            --danger: #EF4444;
+            --warning: #F59E0B;
+            --light: #F3F4F6;
+            --dark: #1F2937;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #F9FAFB;
+            color: #333;
+        }
+        
+        /* Navbar styling */
+        .navbar {
+            background: linear-gradient(135deg, #2E7DD1, #1A5BA0);
+            padding: 1rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        
+        .navbar-brand {
+            font-weight: 700;
+            font-size: 1.5rem;
+            letter-spacing: 0.5px;
+        }
+        
+        .nav-link {
+            font-weight: 500;
+            position: relative;
+            margin: 0 0.3rem;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link::after {
+            content: '';
+            position: absolute;
+            width: 0;
+            height: 2px;
+            background-color: white;
+            bottom: 0;
+            left: 0;
+            transition: width 0.3s ease;
+        }
+        
+        .nav-link:hover::after {
+            width: 100%;
+        }
+        
+        /* Container styling */
+        .main-container {
+            padding: 2rem;
+            max-width: 1400px;
+            margin: 0 auto;
+        }
+        
+        .content-card {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            overflow: hidden;
+            margin-bottom: 2rem;
+        }
+        
+        .card-header {
+            padding: 1.5rem;
+            border-bottom: 1px solid #f0f0f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .card-header h2 {
+            font-weight: 600;
+            color: var(--dark);
+            margin: 0;
+        }
+        
+        /* Button styling */
+        .btn {
+            border-radius: 8px;
+            padding: 0.5rem 1rem;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-add {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+        }
+        
+        .btn-add:hover {
+            background-color: var(--primary-dark);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        
+        .btn-edit {
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            width: auto !important;
+        }
+        
+        .btn-delete {
+            background-color: var(--danger);
+            color: white;
+            border: none;
+            width: auto !important;
+        }
+        
+        .btn-action {
+            padding: 0.4rem 0.8rem;
+            font-size: 0.85rem;
+        }
+        
+        /* Table styling */
+        .tours-table {
+            margin: 0;
+        }
+        
+        .tours-table thead {
+            background-color: #f9fafb;
+        }
+        
+        .tours-table th {
+            color: var(--dark);
+            font-weight: 600;
+            padding: 1rem;
+            border-bottom: 2px solid #edf2f7;
+        }
+        
+        .tours-table td {
+            padding: 0.75rem 1rem;
+            vertical-align: middle;
+        }
+        
+        .tours-table tbody tr {
+            transition: all 0.2s ease;
+        }
+        
+        .tours-table tbody tr:hover {
+            background-color: #f9fafb;
+        }
+        
+        .table-img {
+            width: 40px;
+            height: 40px;
+            object-fit: cover;
+            border-radius: 6px;
+        }
+        
+        /* Column styling */
+        .small-column {
+            max-width: 100px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .medium-column {
+            max-width: 200px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .status-badge {
+            background-color: #E5F6FD;
+            color: #0284C7;
+            border-radius: 20px;
+            padding: 4px 12px;
+            font-weight: 500;
+            font-size: 0.8rem;
+            display: inline-block;
+        }
+        
+        .status-badge.active {
+            background-color: #DCFCE7;
+            color: #16A34A;
+        }
+        
+        .status-badge.inactive {
+            background-color: #FEE2E2;
+            color: #DC2626;
+        }
+        
+        /* Action buttons styling */
+        .row-btn-action {
+            display: flex;
+            gap: 8px;
+        }
+        
+        /* Modal styling */
+        .modal-content {
+            border-radius: 12px;
+            border: none;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .modal-header {
+            background-color: var(--primary);
+            color: white;
+            border-radius: 12px 12px 0 0;
+            padding: 1.2rem 1.5rem;
+        }
+        
+        .modal-title {
+            font-weight: 600;
+        }
+        
+        .modal-footer {
+            border-top: 1px solid #edf2f7;
+            padding: 1rem 1.5rem;
+        }
+        
+        .form-label {
+            font-weight: 500;
+            color: var(--dark);
+            margin-bottom: 0.5rem;
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            padding: 0.6rem 1rem;
+            border: 1px solid #ddd;
+            transition: all 0.3s ease;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(46, 125, 209, 0.15);
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 992px) {
+            .main-container {
+                padding: 1rem;
+            }
+            
+            .table-responsive {
+                overflow-x: auto;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Navigation Bar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container-fluid">
+            <a class="navbar-brand" href="/">
+                <i class="fas fa-globe-americas me-2"></i>Travel App
+            </a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    <li class="nav-item">
+                        <a class="nav-link" href="/"><i class="fas fa-home me-1"></i> Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="dashboard"><i class="fas fa-chart-line me-1"></i> Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="tours"><i class="fas fa-map-marked-alt me-1"></i> Tours</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="bookings"><i class="fas fa-calendar-check me-1"></i> Bookings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="ratings"><i class="fas fa-star me-1"></i> Ratings</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="comments"><i class="fas fa-comments me-1"></i> Comments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="news"><i class="fas fa-newspaper me-1"></i> News</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="payments"><i class="fas fa-credit-card me-1"></i> Payments</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="thong_ke"><i class="fas fa-chart-pie me-1"></i> Statistics</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="accounts"><i class="fas fa-users me-1"></i> Accounts</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/invoices"><i class="fas fa-file-invoice-dollar me-1"></i> Invoices</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
     
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+    <!-- Main Content -->
+    <div class="main-container">
+        <div class="content-card">
+            <div class="card-header">
+                <h2><i class="fas fa-map-marked-alt me-2"></i>Tours List</h2>
+                <button type="button" class="btn btn-add" data-bs-toggle="modal" data-bs-target="#addTourModal">
+                    <i class="fas fa-plus me-1"></i> Add New Tour
+                </button>
+            </div>
+            
+            <div class="table-responsive">
+                <table class="table tours-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Title</th>
+                            <th>Description</th>
+                            <th>Adult Price</th>
+                            <th>Child Price</th>
+                            <th>Duration</th>
+                            <th>Start Date</th>
+                            <th>End Date</th>
+                            <th>Image</th>
+                            <th>Status</th>
+                            <th>Tour Images</th>
+                            <th>Bookings</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr th:each="tour : ${tours}">
+                            <td th:text="${tour.tourId}" class="small-column"></td>
+                            <td th:text="${tour.title}" class="small-column"></td>
+                            <td th:text="${tour.description}" class="medium-column"></td>
+                            <td th:text="${#numbers.formatDecimal(tour.adult_price, 0, 'COMMA', 0, 'POINT')} + ' đ'" class="medium-column"></td>
+                            <td th:text="${#numbers.formatDecimal(tour.child_price, 0, 'COMMA', 0, 'POINT')} + ' đ'" class="medium-column"></td>
+                            <td th:text="${tour.duration} + ' days'" class="small-column"></td>
+                            <td th:text="${#dates.format(tour.startDate, 'dd/MM/yyyy')}" class="small-column"></td>
+                            <td th:text="${#dates.format(tour.endDate, 'dd/MM/yyyy')}" class="small-column"></td>
+                            <td class="small-column">
+                                <img class="table-img" th:src="${tour.image}" alt="Tour image" onerror="this.src='https://via.placeholder.com/40';">
+                            </td>
+                            <td>
+                                <span th:text="${tour.status}" th:class="${tour.status == 'Active' ? 'status-badge active' : 'status-badge inactive'}"></span>
+                            </td>
+                            <td>
+                                <form action="#" th:action="@{/addImageToTour/{id}(id=${tour.tourId})}" method="post">
+                                    <button type="submit" class="btn btn-primary btn-action">
+                                        <i class="fas fa-images me-1"></i> Add Images
+                                    </button>
+                                </form>
+                            </td>
+                            <td>
+                                <form action="#" th:action="@{/addTourToBooking/{id}(id=${tour.tourId})}" method="post">
+                                    <button type="submit" class="btn btn-secondary btn-action">
+                                        <i class="fas fa-calendar-plus me-1"></i> Add to Booking
+                                    </button>
+                                </form>
+                            </td>
+                            <td class="row-btn-action">
+                                <form action="#" th:action="@{/editTour/{id}(id=${tour.tourId})}" method="post">
+                                    <button type="submit" class="btn btn-edit btn-action">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                </form>
+                                <form action="#" th:action="@{/deleteTour/{id}(id=${tour.tourId})}" method="post">
+                                    <button type="submit" class="btn btn-delete btn-action">
+                                        <i class="fas fa-trash"></i> Delete
+                                    </button>
+                                </form>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
 
-    <title>Travel App</title>
-	<style>
-		
-		       .container {
-		           margin-left: 20px;
-		           max-width: 1150px;
-		       }
-		       .row-btn-action button {
-		           width: 50px;
-		       }
-		       .row-btn-action {
-		           display: flex;
-		           flex-direction: row;
-		           justify-content: start;
-		           align-items: center;
-		       }
-			  
-			   
-		       .btn-size {
-		           width: 50px;
-		           height: 30px;
-		           margin-right: 10px;
-		           border: 1px solid #999;
-		           border-radius: 2px;
-		           color: #fff;
-		       }
-		       
-		       .modal-dialog-centered {
-		           display: flex;
-		           align-items: center;
-		           justify-content: center;
-		           min-height: 70vh;
-		       }
-		       .small-column {
-		           max-width: 100px;
-		           white-space: nowrap;
-		           overflow: hidden;
-		           text-overflow: ellipsis;
-		       }
-		       .medium-column {
-		           max-width: 200px;
-		           white-space: nowrap;
-		           overflow: hidden;
-		           text-overflow: ellipsis;
-		       }
-		       .row-btn-action {
-		           display: flex;
-		           gap: 5px;
-		       }
-		       .row-btn-action form {
-		           margin: 0;
-		       }
-		       .row-btn-action button {
-		           width: 80px;
-		       }
-		       .avatar-image {
-		           width: 50px;
-		           height: 50px;
-		           border-radius: 50%;
-		       }
-		       .header-list {
-		           display: flex;
-		           flex-direction: row;
-		           justify-content: space-between;
-		           align-items: center;
-		       }
-		       .btn-add-tour {
-		           position: fixed;
-		           margin-left: 1300px;
-		       }
-		       .modal-header {
-		           background-color: #f8f9fa;
-		           border-bottom: 1px solid #dee2e6;
-		       }
-		       .modal-footer {
-		           background-color: #f8f9fa;
-		           border-top: 1px solid #dee2e6;
-		       }
-		       .modal-title {
-		           font-weight: bold;
-		       }
-		       .form-group label {
-		           font-weight: bold;
-		       }
-		       .btn-primary {
-		           background-color: #007bff;
-		           border-color: #007bff;
-		       }
-		       .btn-primary:hover {
-		           background-color: #0056b3;
-		           border-color: #004085;
-		       }
-		       .form-control-file {
-		           margin-top: 10px;
-		       }
-		       table {
-		           margin-top: 20px;
-		       }
-		       table th, table td {
-		           text-align: center;
-		           vertical-align: middle;
-		       }
-			 
-	</style>
-  </head>
-  <body>
-	<nav class="navbar navbar-expand-lg navbar-light bg-dark">
-	  <div class="container-fluid">
-	    <a class="navbar-brand text-white" href="/">Travel App</a>
-	    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-	      <span class="navbar-toggler-icon"></span>
-	    </button>
-	    <div class="collapse navbar-collapse" id="navbarSupportedContent">
-	      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-	        <li class="nav-item">
-	          <a class="nav-link active text-white" aria-current="page" href="/">Home</a>
-	        </li>
-			<li class="nav-item">
-			          <a class="nav-link text-white" href="dashboard">DashBoard</a>
-			 </li>
-	        <li class="nav-item">
-	          <a class="nav-link text-white" href="tours">Tours</a>
-	        </li>
-			<li class="nav-item">
-			  <a class="nav-link text-white" href="bookings">Booking Tour</a>
-		    </li>
-			<li class="nav-item">
-				<a class="nav-link text-white" href="my_books">news</a>
-			</li>
-			<li class="nav-item">
-			     <a class="nav-link text-white" href="ratings">Ratings</a>
-			</li>			
-			 <li class="nav-item">
-			 	<a class="nav-link text-white" href="comments">Comments</a>
-			 </li>
-			 <li class="nav-item">
-			 	<a class="nav-link text-white" href="news">News</a>
-			 </li>
-			 <li class="nav-item">
-			 	<a class="nav-link text-white" href="payments">Payments</a>
-			  </li>
-			  <li class="nav-item">
-			  	<a class="nav-link text-white" href="thong_ke">Thống Kê</a>
-			  </li>
-			  <li class="nav-item">
-			  	<a class="nav-link text-white" href="accounts">Accounts</a>
-			  </li>
-			  <li class="nav-item">
-			  				    <a class="nav-link text-white" href="/invoices">Invoices</a>
-			  				</li>
-	      </ul>	
-	        
-	    </div>
-	  </div>
-	</nav>
-      
-	<div class="container mt-4">
-	    <div class="header-list">
-	        <h2>Tours List</h2>
-	        <button type="button" class="btn btn-secondary btn-sm btn-add-tour" data-bs-toggle="modal" data-bs-target="#addTourModal">Add new Tour</button>
-	    </div>
+    <!-- Add Tour Modal -->
+    <div class="modal fade" id="addTourModal" tabindex="-1" aria-labelledby="addTourModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="addTourModalLabel"><i class="fas fa-plus-circle me-2"></i>Add New Tour</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body p-4">
+                    <form action="#" th:action="@{/addOrUpdateTour}" method="post">
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="title" class="form-label">Tour Title</label>
+                                <input type="text" class="form-control" id="title" name="title" placeholder="Enter tour title" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="duration" class="form-label">Duration (days)</label>
+                                <input type="number" class="form-control" id="duration" name="duration" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control" id="description" name="description" rows="3" placeholder="Enter tour description" required></textarea>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="adult_price" class="form-label">Adult Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">đ</span>
+                                    <input type="number" class="form-control" id="adult_price" name="adult_price" required>
+                                </div>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="child_price" class="form-label">Children Price</label>
+                                <div class="input-group">
+                                    <span class="input-group-text">đ</span>
+                                    <input type="number" class="form-control" id="child_price" name="child_price" required>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label for="startDate" class="form-label">Start Date</label>
+                                <input type="date" class="form-control" id="startDate" name="startDate" required>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label for="endDate" class="form-label">End Date</label>
+                                <input type="date" class="form-control" id="endDate" name="endDate" required>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label for="image" class="form-label">Image URL</label>
+                            <input type="text" class="form-control" id="image" name="image" placeholder="Enter image URL">
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-4 mb-3">
+                                <label for="kind" class="form-label">Tour Type</label>
+                                <input type="text" class="form-control" id="kind" name="kind" placeholder="e.g., Adventure, Cultural">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="departure_location" class="form-label">Departure Location</label>
+                                <input type="text" class="form-control" id="departure_location" name="departure_location" placeholder="e.g., Hanoi">
+                            </div>
+                            <div class="col-md-4 mb-3">
+                                <label for="destination_location" class="form-label">Destination</label>
+                                <input type="text" class="form-control" id="destination_location" name="destination_location" placeholder="e.g., Ha Long Bay">
+                            </div>
+                        </div>
+                        
+                        <div class="modal-footer px-0 pb-0">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">
+                                <i class="fas fa-times me-1"></i> Cancel
+                            </button>
+                            <button type="submit" class="btn btn-add">
+                                <i class="fas fa-save me-1"></i> Save Tour
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
 
-	    <table class="table table-striped table-bordered" >
-	        <thead>
-	            <tr>
-	                <th scope="col">Id</th>
-	                <th scope="col">title</th>
-	                <th scope="col">description</th>
-	                <th scope="col">Adult price</th>
-					<th scope="col">Child price</th>
-	                <th scope="col">duration</th>
-	                <th scope="col">startDate</th>
-	                <th scope="col">endDate</th>
-	                <th scope="col">image</th>
-					<th scope="col">Status</th>
-					<th scope="col">AddTourImage</th>
-					<th scope="col">AddToBookings</th>
-	                <th scope="col">Action</th>
-	            </tr>
-	        </thead>
-	        <tbody>
-	            <tr th:each="tour : ${tours}">
-	                <td th:text="${tour.tourId}" class="small-column"></td>
-	                <td th:text="${tour.title}" class="small-column"></td>
-	                <td th:text="${tour.description}" class="medium-column"></td>
-	                <td th:text="${tour.adult_price}" class="medium-column"></td>
-					<td th:text="${tour.child_price}" class="medium-column"></td>
-	                <td th:text="${tour.duration}" class="small-column"></td>
-	                <td th:text="${tour.startDate}" class="small-column"></td>
-	                <td th:text="${tour.endDate}" class="small-column"></td>
-	                <td th:text="${tour.image}" class="small-column"></td>
-					<td th:text="${tour.status}" class="medium-column"></td>
-					<td class="kichthuoccot">
-						<form action="#" th:action="@{/addImageToTour/{id}(id=${tour.tourId})}" method="post">
-							 <button type="submit" class="btn btn-secondary btn-chinsua  btn-primary btn-sm">Add Image</button>
-						</form> 
-					</td>
-					<td >
-						<form action="#" th:action="@{/addTourToBooking/{id}(id=${tour.tourId})}" method="post">
-							 <button type="submit" class="btn   btn-secondary btn-sm">Add to Booking</button>
-						</form> 
-					</td>
-
-	                <td class="row-btn-action">
-	                    <form action="#" th:action="@{/editTour/{id}(id=${tour.tourId})}" method="post">
-	                        <button type="submit" style="background-color: blue;" class="btn-size btn btn-secondary btn-sm">Edit</button>
-	                    </form>
-	                    <form action="#" th:action="@{/deleteTour/{id}(id=${tour.tourId})}" method="post">
-	                        <button type="submit" style="background-color: red;" class="btn-size btn btn-secondary btn-sm">Delete</button>
-	                    </form>
-	                </td>
-	            </tr>
-	        </tbody>
-	    </table>
-	</div>
-
-	<div class="modal fade" id="addTourModal" tabindex="-1" aria-labelledby="addTourModalLabel" aria-hidden="true">
-	  <div class="modal-dialog modal-dialog-centered">
-	    <div class="modal-content">
-	      <div class="modal-header">
-	        <h5 class="modal-title" id="addTourModalLabel">Add Tour</h5>
-	        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-	      </div>
-	      <div class="modal-body">
-	        <form action="#" th:action="@{/addOrUpdateTour}" method="post">
-	          <div class="form-group mb-3">
-	            <label for="title">Title</label>
-	            <input type="text" class="form-control" id="title" name="title" required>
-	          </div>
-	          <div class="form-group mb-3">
-	            <label for="description">Description</label>
-	            <textarea class="form-control" id="description" name="description" rows="3" required></textarea>
-	          </div>
-	          <div class="form-group mb-3">
-	            <label for="adult_price">Adult Price</label>
-	            <input type="number"  class="form-control" id="adult_price" name="adult_price" required>
-	          </div>
-			  <div class="form-group mb-3">
-			     <label for="child_price">Children Price</label>
-			     <input type="number"  class="form-control" id="child_price" name="child_price" required>
-			  </div>
-	          <div class="form-group mb-3">
-	            <label for="duration">Duration (days)</label>
-	            <input type="number" class="form-control" id="duration" name="duration" required>
-	          </div>
-	          <div class="form-group mb-3">
-	            <label for="startDate">Start Date</label>
-	            <input type="date" class="form-control" id="startDate" name="startDate" required>
-	          </div>
-	          <div class="form-group mb-3">
-	            <label for="endDate">End Date</label>
-	            <input type="date" class="form-control" id="endDate" name="endDate" required>
-	          </div>
-	          <div class="form-group mb-3">
-	            <label for="image">Image</label>
-	            <input type="text" class="form-control-file" id="image" name="image">
-	          </div>
-			  <div class="form-group mb-3">
-			    <label for="kind">kind</label>
-			    <input type="text" class="form-control-file" id="kind" name="kind">
-			  </div>
-			  <div class="form-group mb-3">
-			  	<label for="departure_location">departure_location:</label>
-			  	<input type="text" class="form-control-file" id="departure_location" name="departure_location">
-			  </div>
-			  <div class="form-group mb-3">
-			  	<label for="destination_location">destination_location</label>
-			  	<input type="text" class="form-control-file" id="destination_location" name="destination_location">
-			  </div>
-	          <div class="modal-footer">
-	            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-	            <button type="submit" class="btn btn-primary">Add Tour</button>
-	          </div>
-	        </form>
-	      </div>
-	    </div>
-	  </div>
-	</div>
-	
-	
-	
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.2/dist/umd/popper.min.js" integrity="sha384-IQsoLXl5PILFhosVNubq5LC7Qb9DXgDA9i+tQ8Zj3iwWAwPtgFTxbJ8NT4GN1R8p" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.min.js" integrity="sha384-cVKIPhGWiC2Al4u+LWgxfKTRIcfu0JTxR+EQDz/bgldoEyl4H0zUF0QKbrJ0EcQF" crossorigin="anonymous"></script>
-    
-  </body>
+    <!-- Bootstrap & Required Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</body>
 </html>
