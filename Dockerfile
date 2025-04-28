@@ -1,14 +1,13 @@
-# Sử dụng image base Java (OpenJDK)
+# Base image chỉ cần JDK để chạy
 FROM openjdk:17-jdk-slim
 
-# Thêm thông tin về ứng dụng
-ARG JAR_FILE=target/tourist-0.0.1-SNAPSHOT.jar
+WORKDIR /app
 
-# Sao chép file JAR vào container
-COPY ${JAR_FILE} app.jar
+# Copy file JAR đã build sẵn vào container
+COPY target/tourist-0.0.1-SNAPSHOT.jar app.jar
 
-# Chạy ứng dụng Spring Boot
-ENTRYPOINT ["java", "-jar", "/app.jar"]
+# Chạy file JAR
+ENTRYPOINT ["java", "-jar", "app.jar"]
 
-# Mở port 8080 để ứng dụng có thể truy cập
+# Mở cổng 8080
 EXPOSE 8080
