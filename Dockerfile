@@ -1,13 +1,26 @@
-# Base image chỉ cần JDK để chạy
-FROM openjdk:17-jdk-slim
+# Stage 1: Build từ source code
+FROM maven:3.9.3-eclipse-temurin-17 AS builder
 
+# Đặt thư mục làm việc trong container
 WORKDIR /app
 
-# Copy file JAR đã build sẵn vào container
-COPY target/tourist-0.0.1-SNAPSHOT.jar app.jar
+# Copy toàn bộ source code vào container
+COPY . .
 
-# Chạy file JAR
+# Build project, tạo file .jar
+RUN mvn clean package -DskipTests
+
+# Stage 2: Chạy file jar đã build
+FROM openjdk:17-jdk-slim
+
+# Thư mục làm việc khi container chạy
+WORKDIR /app
+
+# Copy file .jar từ Stage 1 sang
+COPY --from=builder /app/target/*.jar app.jar
+
+# Chạy file jar
 ENTRYPOINT ["java", "-jar", "app.jar"]
 
-# Mở cổng 8080
+# Mở port 8080 để Railway biết mở cổng
 EXPOSE 8080
