@@ -18,57 +18,7 @@ import com.tourist.Until.VNPayUtil;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
-//@Service
-//@RequiredArgsConstructor
-//public class PaymentService {
-//	 private VNPAYConfig vnPayConfig;
-//
-//	    // Constructor để tiêm phụ thuộc
-//	    @Autowired
-//	    public PaymentService(VNPAYConfig vnPayConfig) {
-//	        this.vnPayConfig = vnPayConfig;
-//	    }
-//
-//	    public PaymentDTO.VNPayResponse createVnPayPayment(HttpServletRequest request) {
-//	        String amountStr = request.getParameter("amount");
-//	        
-//	        if (amountStr == null || amountStr.isEmpty()) {
-//	            throw new IllegalArgumentException("Thiếu tham số amount");
-//	        }
-//
-//	        long amount;
-//	        try {
-//	            amount = Long.parseLong(amountStr) * 100L;
-//	        } catch (NumberFormatException e) {
-//	            throw new IllegalArgumentException("Định dạng amount không hợp lệ");
-//	        }
-//
-//	        // Tiếp tục với logic còn lại
-//	        String bankCode = request.getParameter("bankCode");
-//	        String bookingId = request.getParameter("bookingId");
-//	        String userId = request.getParameter("userId");
-//	        Map<String, String> vnpParamsMap = vnPayConfig.getVNPayConfig();
-//	        vnpParamsMap.put("vnp_Amount", String.valueOf(amount));
-//	        vnpParamsMap.put("bookingId", bookingId);
-//	        vnpParamsMap.put("userId", userId);
-//	        if (bankCode != null && !bankCode.isEmpty()) {
-//	            vnpParamsMap.put("vnp_BankCode", bankCode);
-//	        }
-//
-//	        vnpParamsMap.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
-//	        
-//	        String queryUrl = VNPayUtil.getPaymentURL(vnpParamsMap, true);
-//	        String hashData = VNPayUtil.getPaymentURL(vnpParamsMap, false);
-//	        String vnpSecureHash = VNPayUtil.hmacSHA512(vnPayConfig.getSecretKey(), hashData);
-//	        queryUrl += "&vnp_SecureHash=" + vnpSecureHash;
-//	        
-//	        String paymentUrl = vnPayConfig.getVnp_PayUrl() + "?" + queryUrl;
-//	        
-//	        return new PaymentDTO.VNPayResponse("ok", "success", paymentUrl);
-//	    }
-//	    }
 @Service
-@RequiredArgsConstructor
 public class PaymentService {
     private final VNPAYConfig vnPayConfig;
 
