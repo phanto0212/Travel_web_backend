@@ -2,7 +2,7 @@
 FROM openjdk:17-jdk-slim
 
 # Thêm thông tin về ứng dụng
-ARG JAR_FILE=target/*.jar
+ARG JAR_FILE=target/tourist-0.0.1-SNAPSHOT.jar
 
 # Sao chép file JAR vào container
 COPY ${JAR_FILE} app.jar
