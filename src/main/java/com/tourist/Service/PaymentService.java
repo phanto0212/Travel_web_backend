@@ -62,7 +62,7 @@ public class PaymentService {
         vnpParamsMap.put("vnp_IpAddr", VNPayUtil.getIpAddress(request));
 
         try {
-            String callbackUrl = "http://localhost:8080/api/v1/payment/vn-pay-callback"
+            String callbackUrl = "https://travel-web-backend-1.onrender.com/api/v1/payment/vn-pay-callback"
                     + "?bookingId=" + URLEncoder.encode(bookingId, StandardCharsets.US_ASCII.toString())
                     + "&userId=" + URLEncoder.encode(userId, StandardCharsets.US_ASCII.toString());
             System.out.println("Callback URL: " + callbackUrl);
